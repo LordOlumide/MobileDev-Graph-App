@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../UI/screens/home_screen.dart';
+import 'app/UI/home_screen.dart';
+import 'app/constants/app_theme.dart';
 
 class GraphApp extends StatelessWidget {
   const GraphApp({super.key});
@@ -7,11 +8,12 @@ class GraphApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Graph App',
-        initialRoute: 'Home screen',
-        routes: {
-            'Home screen': 
-        }
+      title: 'Graph App',
+      home: const HomeScreen(),
+      theme: ThemeData(
+        fontFamily: 'Rubik',
+        scaffoldBackgroundColor: scaffoldBackgroundColor,
+      ),
     );
   }
 }
