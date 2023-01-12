@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
-getDecodedFile() {
-  final file = jsonDecode('assets/jsons/Forged Widows Data.json');
-  print('File is a ${file.runtimeType}');
-  print('File contents:');
-  print(file);
+Future<List<Map<String, dynamic>>> getDecodedFile() async {
+  final String fileString =
+      await File('Forged Widows Data.json').readAsString();
+  final List<Map<String, dynamic>> contents =
+      jsonDecode(fileString).cast<Map<String, dynamic>>();
 
-  return file;
+  return contents;
 }
