@@ -3,14 +3,14 @@ import '../../constants/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../ui_helpers/shadows.dart';
 
-class Container1 extends StatelessWidget {
+class Section1 extends StatelessWidget {
   final String image;
   final String iconPath;
   final String headerText;
   final int? count;
   final Color iconColor;
 
-  const Container1({
+  const Section1({
     super.key,
     required this.image,
     required this.iconPath,

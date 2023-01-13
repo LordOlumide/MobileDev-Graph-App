@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../services/number_rounder.dart';
-import '../../ui_helpers/shadows.dart';
 import '../../../constants/app_theme.dart';
-import 'components/label_bar.dart';
-import 'components/bar.dart';
+import '../section2_container.dart';
+import '../horizontal_label/label_bar.dart';
+import '../horizontal_bar.dart';
 
-class HorizontalBarChartSection1 extends StatelessWidget {
+class LGAChart extends StatelessWidget {
   /// Format: {'lga': 'String', 'count': int}
-  final List<Map<String, dynamic>> registrationData;
-  final Color barActiveColor;
+  final List<Map<String, dynamic>> lgaRegistrationData;
 
-  // initialized vars
   late final int xAxisMaxLabel;
 
-  HorizontalBarChartSection1({
+  LGAChart({
     super.key,
-    required this.registrationData,
-    required this.barActiveColor,
+    required this.lgaRegistrationData,
   }) {
     xAxisMaxLabel = initializeNaxNum();
   }
 
   int initializeNaxNum() {
-    int maxNum = registrationData.fold(
+    int maxNum = lgaRegistrationData.fold(
         0,
         (previousValue, element) => element['count'] > previousValue
             ? element['count']
@@ -32,25 +29,7 @@ class HorizontalBarChartSection1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: pureWhite,
-        borderRadius: BorderRadius.circular(5.43),
-        boxShadow: [
-          customShadow1(
-            dx: 1.63,
-            dy: 1.63,
-            blurRadius: 8.15,
-            opacity: 0.2,
-          ),
-          customShadow2(
-            dx: 0.54,
-            dy: 0.54,
-            blurRadius: 1.09,
-            opacity: 0.25,
-          ),
-        ],
-      ),
+    return Container2(
       child: Column(
         children: [
           // Header Text
@@ -76,7 +55,7 @@ class HorizontalBarChartSection1 extends StatelessWidget {
                 // Name of Local Government
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: registrationData
+                  children: lgaRegistrationData
                       .map((personData) => Padding(
                             padding: const EdgeInsets.only(bottom: 7),
                             child: Text(
@@ -98,11 +77,11 @@ class HorizontalBarChartSection1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // TODO: Sort in reverse order of name
-                    ...registrationData
+                    ...lgaRegistrationData
                         .map((personData) => Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 5, left: 2, right: 2),
-                              child: Bar(
+                              child: HorizontalBar(
                                 ratio: personData['count'] / xAxisMaxLabel,
                                 barColor: deepBlue,
                                 width:

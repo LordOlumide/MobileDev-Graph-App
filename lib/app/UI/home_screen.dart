@@ -3,8 +3,8 @@ import '../constants/app_theme.dart';
 import '../data/data_repo.dart';
 import './ui_helpers/shadows.dart';
 // widgets
-import 'widgets/custom_container_1.dart';
-import 'widgets/horiz_bar_chart_1/horiz_bar_chart.dart';
+import 'widgets/section1_container.dart';
+import 'widgets/lga_chart/lga_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 return Column(
                   children: [
-                    Container1(
+                    Section1(
                       image: 'assets/images/blue_wave.png',
                       iconPath: 'assets/svgs/group.svg',
                       headerText: 'TOTAL NUMBER OF WIDOWS REGISTERED',
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       iconColor: normalBlue.withOpacity(0.67),
                     ),
                     const SizedBox(height: 24),
-                    Container1(
+                    Section1(
                       image: 'assets/images/purple_wave.png',
                       iconPath: 'assets/svgs/person_and_houses.svg',
                       headerText: 'SELECT LOCAL GOVERNMENT',
@@ -73,9 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 32),
                     snapshot.connectionState == ConnectionState.done
-                        ? HorizontalBarChartSection1(
-                            registrationData: DataRepo.lgaAndWidowCount,
-                            barActiveColor: deepBlue,
+                        ? LGAChart(
+                            lgaRegistrationData: DataRepo.lgaData,
                           )
                         : CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation(deepBlue),

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-class Bar extends StatelessWidget {
+class VerticalBar extends StatelessWidget {
   final double ratio;
   final Color barColor;
   final double height;
   final double width;
 
-  const Bar({
+  const VerticalBar({
     super.key,
     required this.ratio,
     required this.barColor,
-    required this.width,
-    this.height = 9.0,
+    required this.height,
+    this.width = 16,
   });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.bottomCenter,
       children: [
         Container(
           color: barColor.withOpacity(0.03),
