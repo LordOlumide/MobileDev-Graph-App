@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../section2_container.dart';
+import '../components/container_2.dart';
 import '../../../services/number_rounder.dart';
 import '../../../constants/app_theme.dart';
-import '../vertical_bar.dart';
-import '../vertical_label/vertical_label_bar.dart';
+import '../components/vertical_bar.dart';
+import '../components/vertical_label/vertical_label_bar.dart';
 import '../../../services/format_occupation.dart';
 
 class OccupationChart extends StatelessWidget {
@@ -14,10 +14,10 @@ class OccupationChart extends StatelessWidget {
   final int minIndex = 1500;
 
   OccupationChart({super.key, required this.occupationData}) {
-    yAxisMaxLabel = initializeNaxNum();
+    yAxisMaxLabel = initializeMaxNum();
   }
 
-  int initializeNaxNum() {
+  int initializeMaxNum() {
     int maxNum = occupationData.fold(
         0,
         (previousValue, element) => element['count'] > previousValue
@@ -28,8 +28,6 @@ class OccupationChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-
     List<Map<String, dynamic>> displayCopy = [];
     for (Map<String, dynamic> item in occupationData) {
       if (item['count'] >= minIndex) {
@@ -37,7 +35,7 @@ class OccupationChart extends StatelessWidget {
       }
     }
 
-    return Container2(
+    return ShadowedContainer2(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -54,77 +52,82 @@ class OccupationChart extends StatelessWidget {
             ),
           ),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Vertical Axis
+              Column(
                 children: [
-                  // Vertical Axis
-                  Column(
-                    children: [
-                      VerticalLabelBar(
-                        maxLabel: yAxisMaxLabel,
-                        minLabel: minIndex,
-                        ySpaceAvailable: 140 + 5,
-                        noOfLabels: 10,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 7),
-
-                  // Bars
-                  Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 24,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ...displayCopy
-                            .map((personData) => Column(
-                                  children: [
-                                    VerticalBar(
-                                      ratio: (personData['count'] - minIndex) /
-                                          (yAxisMaxLabel - minIndex),
-                                      barColor: normalBlue,
-                                      height: 140,
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Container(
-                                      width: 1,
-                                      height: 3,
-                                      color: pureBlack,
-                                    ),
-                                    const SizedBox(height: 7),
-                                    SizedBox(
-                                      width: 35,
-                                      child: Text(
-                                        formatOccupation(
-                                            personData['occupation']),
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 6,
-                                          fontWeight: FontWeight.w400,
-                                          color: nearBlack,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                            .toList(),
-                      ],
-                    ),
+                  VerticalLabelBar(
+                    maxLabel: yAxisMaxLabel,
+                    minLabel: minIndex,
+                    ySpaceAvailable: 140 + 5,
+                    noOfLabels: 10,
                   ),
                 ],
+              ),
+
+              // Bars
+              Container(
+                margin: const EdgeInsets.only(
+                  bottom: 24,
+                  top: 2,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...displayCopy
+                        .map((personData) => _barAndLabel(
+                              personData: personData,
+                              minIndex: minIndex,
+                              yAxisMaxLabel: yAxisMaxLabel,
+                            ))
+                        .toList(),
+                  ],
+                ),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Column _barAndLabel({
+    required Map<String, dynamic> personData,
+    required int minIndex,
+    required int yAxisMaxLabel,
+  }) {
+    return Column(
+      children: [
+        // Bar
+        VerticalBar(
+          ratio: (personData['count'] - minIndex) / (yAxisMaxLabel - minIndex),
+          barColor: normalBlue,
+          height: 140,
+        ),
+        const SizedBox(height: 7),
+        Container(width: 1, height: 3, color: pureBlack),
+        const SizedBox(height: 2),
+
+        // Occupation names
+        SizedBox(
+          width: 35,
+          child: Text(
+            formatOccupation(personData['occupation']),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 6,
+              fontWeight: FontWeight.w400,
+              color: nearBlack,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

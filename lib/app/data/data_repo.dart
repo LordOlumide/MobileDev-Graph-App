@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import '../services/date_formatter.dart';
 
 class DataRepo {
   // // TODO: change home screen state to depend on this, not file
@@ -17,14 +18,19 @@ class DataRepo {
   /// Format: {'lga': 'String', 'count': int}
   static late List<Map<String, dynamic>> lgaData;
 
+  /// For section 7
+  /// Format: {'ageWhenWidowed': 'String', 'count': int}
+  static late List<Map<String, dynamic>> ageWhenWidowedData;
+
   /// For section 8
+  /// Format: {'occupation': 'String', 'count': int}
   static late List<Map<String, dynamic>> occupationData;
 
   static Future<void> initialize() async {
-    file = decodeFile();
+    file = decodeFileAndCalculatVars();
   }
 
-  static Future<List<Map<String, dynamic>>> decodeFile() async {
+  static Future<List<Map<String, dynamic>>> decodeFileAndCalculatVars() async {
     final String fileString =
         await rootBundle.loadString('assets/jsons/json_data.json');
     late final List<Map<String, dynamic>> contents =
@@ -47,22 +53,28 @@ class DataRepo {
 
   static void calculateVars(List<Map<String, dynamic>> contents) {
     final List<Map<String, dynamic>> lgasToFreqList = [];
+    final List<Map<String, dynamic>> widowedAgeToFreqList = [];
     final List<Map<String, dynamic>> occupationTypeToFreqList = [];
 
     for (Map<String, dynamic> widowData in contents) {
       final String widowLga = widowData['lga'];
+
       late final String occupation;
       try {
         occupation = widowData['occupation'];
       } on TypeError {
         occupation = 'Unemployed';
       }
+
+      final int ageWhenWidowedInYears = getAgeWhenWidowed(widowData);
+
       bool lgaMatchFound = false;
       bool occupationMatchFound = false;
+      bool ageWhenWidowedMatchFound = false;
 
-      for (Map<String, dynamic> lgaToFreq in lgasToFreqList) {
-        if (lgaToFreq['lga'] == widowLga) {
-          lgaToFreq['count']++;
+      for (Map<String, dynamic> lga in lgasToFreqList) {
+        if (lga['lga'] == widowLga) {
+          lga['count']++;
           lgaMatchFound = true;
           break;
         }
@@ -74,12 +86,23 @@ class DataRepo {
           break;
         }
       }
+      for (Map<String, dynamic> ageWhenWidowed in widowedAgeToFreqList) {
+        if (ageWhenWidowed['ageWhenWidowed'] == ageWhenWidowedInYears) {
+          ageWhenWidowed['count']++;
+          ageWhenWidowedMatchFound = true;
+          break;
+        }
+      }
 
       if (lgaMatchFound == false) {
         lgasToFreqList.add({'lga': widowLga, 'count': 1});
       }
       if (occupationMatchFound == false) {
         occupationTypeToFreqList.add({'occupation': occupation, 'count': 1});
+      }
+      if (ageWhenWidowedMatchFound == false) {
+        widowedAgeToFreqList
+            .add({'ageWhenWidowed': ageWhenWidowedInYears, 'count': 1});
       }
     }
 
@@ -89,5 +112,17 @@ class DataRepo {
     lgaData = [...lgasToFreqList];
 
     occupationData = [...occupationTypeToFreqList];
+
+    widowedAgeToFreqList
+        .sort((a, b) => a['ageWhenWidowed'].compareTo(b['ageWhenWidowed']));
+    ageWhenWidowedData = [...widowedAgeToFreqList];
+  }
+
+  static int getAgeWhenWidowed(Map<String, dynamic> widowData) {
+    final DateTime dateWidowed = DateTime.parse(
+        formatToDateTimeAcceptable(widowData['husbandBereavementDate']));
+    final DateTime dateOfBirth = DateTime.parse(widowData['dob']);
+    final Duration ageWhenWidowedDuration = dateWidowed.difference(dateOfBirth);
+    return DateTime(0, 0, ageWhenWidowedDuration.inDays).year;
   }
 }

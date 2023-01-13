@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_theme.dart';
+import '../../../constants/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../ui_helpers/shadows.dart';
+import '../../ui_helpers/shadows.dart';
 
-class Section1 extends StatelessWidget {
+class ShadowedContainer1 extends StatelessWidget {
   final String image;
   final String iconPath;
   final String headerText;
   final int? count;
   final Color iconColor;
 
-  const Section1({
+  const ShadowedContainer1({
     super.key,
     required this.image,
     required this.iconPath,

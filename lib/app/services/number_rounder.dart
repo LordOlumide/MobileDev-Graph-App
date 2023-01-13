@@ -7,3 +7,13 @@ int roundNumUpToNext100(int number) {
 
   return number;
 }
+
+int roundNumUpToNext10(int number) {
+  int a = number % 10;
+
+  if (a > 0) {
+    return (number ~/ 10) * 10 + 10;
+  }
+
+  return number;
+}

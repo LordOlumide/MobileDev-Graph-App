@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../ui_helpers/shadows.dart';
-import '../../constants/app_theme.dart';
+import '../../ui_helpers/shadows.dart';
+import '../../../constants/app_theme.dart';
 
-class Container2 extends StatelessWidget {
+class ShadowedContainer2 extends StatelessWidget {
   final Widget child;
 
-  const Container2({super.key, required this.child});
+  const ShadowedContainer2({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

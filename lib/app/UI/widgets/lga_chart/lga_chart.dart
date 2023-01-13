@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../services/number_rounder.dart';
 import '../../../constants/app_theme.dart';
-import '../section2_container.dart';
-import '../horizontal_label/horizontal_label_bar.dart';
-import '../horizontal_bar.dart';
+import '../components/container_2.dart';
+import '../components/horizontal_label/horizontal_label_bar.dart';
+import '../components/horizontal_bar.dart';
 
 class LGAChart extends StatelessWidget {
   /// Format: {'lga': 'String', 'count': int}
@@ -29,7 +29,7 @@ class LGAChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container2(
+    return ShadowedContainer2(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

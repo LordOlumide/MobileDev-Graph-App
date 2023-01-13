@@ -3,9 +3,10 @@ import '../constants/app_theme.dart';
 import '../data/data_repo.dart';
 import './ui_helpers/shadows.dart';
 // widgets
-import 'widgets/section1_container.dart';
+import 'widgets/components/container_1.dart';
 import 'widgets/lga_chart/lga_chart.dart';
 import 'widgets/occupation_chart/occupation_chart.dart';
+import 'widgets/age_widowed_chart/age_when_widowed_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 return Column(
                   children: [
-                    // Section 1
-                    Section1(
+                    // Section 1 - Total number
+                    ShadowedContainer1(
                       image: 'assets/images/blue_wave.png',
                       iconPath: 'assets/svgs/group.svg',
                       headerText: 'TOTAL NUMBER OF WIDOWS REGISTERED',
@@ -65,8 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Section 2
-                    Section1(
+                    // Section 2 - Select Local Gov
+                    ShadowedContainer1(
                       image: 'assets/images/purple_wave.png',
                       iconPath: 'assets/svgs/person_and_houses.svg',
                       headerText: 'SELECT LOCAL GOVERNMENT',
@@ -77,34 +78,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Section 3 - number by local gov chart
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        snapshot.connectionState == ConnectionState.done
-                            ? LGAChart(
-                                lgaRegistrationData: DataRepo.lgaData,
-                              )
-                            : CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(deepBlue),
-                              ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                    snapshot.connectionState == ConnectionState.done
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                children: [
+                                  // Section 3 - number by local gov chart
+                                  LGAChart(
+                                    lgaRegistrationData: DataRepo.lgaData,
+                                  ),
+                                  const SizedBox(height: 16),
 
-                    // Section 8 - Occupation chart
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        snapshot.connectionState == ConnectionState.done
-                            ? OccupationChart(
-                                occupationData: DataRepo.occupationData,
-                              )
-                            : CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(deepBlue),
+                                  // Section 7 - Widows age at spouse bereavement
+                                  AgeWhenWidowedChart(
+                                    ageWhenWidowedData:
+                                        DataRepo.ageWhenWidowedData,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Section 8 - Occupation chart
+                                  OccupationChart(
+                                    occupationData: DataRepo.occupationData,
+                                  )
+                                ],
                               ),
-                      ],
-                    ),
+                            ],
+                          )
+                        : CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(deepBlue),
+                          ),
                   ],
                 );
               },
