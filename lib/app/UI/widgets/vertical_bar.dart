@@ -11,7 +11,7 @@ class VerticalBar extends StatelessWidget {
     required this.ratio,
     required this.barColor,
     required this.height,
-    this.width = 16,
+    this.width = 15,
   });
 
   @override
@@ -26,8 +26,8 @@ class VerticalBar extends StatelessWidget {
         ),
         Container(
           color: barColor,
-          width: width * ratio,
-          height: height,
+          height: height * ratio,
+          width: width,
         ),
       ],
     );

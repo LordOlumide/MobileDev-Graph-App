@@ -55,7 +55,7 @@ class DataRepo {
       try {
         occupation = widowData['occupation'];
       } on TypeError {
-        occupation = 'unemployed';
+        occupation = 'Unemployed';
       }
       bool lgaMatchFound = false;
       bool occupationMatchFound = false;
@@ -74,9 +74,6 @@ class DataRepo {
           break;
         }
       }
-      if (occupationTypeToFreqList.isEmpty) {
-        print('KPl');
-      }
 
       if (lgaMatchFound == false) {
         lgasToFreqList.add({'lga': widowLga, 'count': 1});
@@ -92,7 +89,5 @@ class DataRepo {
     lgaData = [...lgasToFreqList];
 
     occupationData = [...occupationTypeToFreqList];
-    print(occupationData);
-    print(occupationData.length);
   }
 }

@@ -1,9 +1,9 @@
-part of 'label_bar.dart';
+part of 'horizontal_label_bar.dart';
 
-class Label extends StatelessWidget {
+class HorizontalLabel extends StatelessWidget {
   final int label;
 
-  const Label(this.label, {super.key});
+  const HorizontalLabel(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,6 +5,7 @@ import './ui_helpers/shadows.dart';
 // widgets
 import 'widgets/section1_container.dart';
 import 'widgets/lga_chart/lga_chart.dart';
+import 'widgets/occupation_chart/occupation_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 return Column(
                   children: [
+                    // Section 1
                     Section1(
                       image: 'assets/images/blue_wave.png',
                       iconPath: 'assets/svgs/group.svg',
@@ -62,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       iconColor: normalBlue.withOpacity(0.67),
                     ),
                     const SizedBox(height: 24),
+
+                    // Section 2
                     Section1(
                       image: 'assets/images/purple_wave.png',
                       iconPath: 'assets/svgs/person_and_houses.svg',
@@ -72,13 +76,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       iconColor: deepBlue,
                     ),
                     const SizedBox(height: 32),
-                    snapshot.connectionState == ConnectionState.done
-                        ? LGAChart(
-                            lgaRegistrationData: DataRepo.lgaData,
-                          )
-                        : CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(deepBlue),
-                          ),
+
+                    // Section 3 - number by local gov chart
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        snapshot.connectionState == ConnectionState.done
+                            ? LGAChart(
+                                lgaRegistrationData: DataRepo.lgaData,
+                              )
+                            : CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(deepBlue),
+                              ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+
+                    // Section 8 - Occupation chart
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        snapshot.connectionState == ConnectionState.done
+                            ? OccupationChart(
+                                occupationData: DataRepo.occupationData,
+                              )
+                            : CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(deepBlue),
+                              ),
+                      ],
+                    ),
                   ],
                 );
               },

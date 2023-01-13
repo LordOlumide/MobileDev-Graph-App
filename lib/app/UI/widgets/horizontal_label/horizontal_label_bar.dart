@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-part 'label.dart';
+part 'horizontal_label.dart';
 
-class LabelBar extends StatelessWidget {
+class HorizontalLabelBar extends StatelessWidget {
   final int maxLabel;
   final int noOfLabels;
   final double xSpaceAvailable;
 
-  const LabelBar({
+  const HorizontalLabelBar({
     super.key,
     required this.maxLabel,
     required this.xSpaceAvailable,
@@ -21,7 +21,8 @@ class LabelBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          for (int i = 0; i <= maxLabel; i += (maxLabel ~/ noOfLabels)) Label(i)
+          for (int i = 0; i <= maxLabel; i += (maxLabel ~/ noOfLabels))
+            HorizontalLabel(i)
         ],
       ),
     );

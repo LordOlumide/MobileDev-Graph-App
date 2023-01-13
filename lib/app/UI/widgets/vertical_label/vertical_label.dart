@@ -1,9 +1,9 @@
-part of 'label_bar.dart';
+part of 'vertical_label_bar.dart';
 
-class Label extends StatelessWidget {
+class VerticalLabel extends StatelessWidget {
   final int label;
 
-  const Label(this.label, {super.key});
+  const VerticalLabel(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {

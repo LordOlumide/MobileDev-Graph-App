@@ -8,3 +8,4 @@ Color deepOrange = const Color(0xFFDC950A);
 Color normalOrange = const Color(0xFFFED500);
 Color nearBlack = const Color(0xFF111111);
 Color pureWhite = const Color(0xFFFFFFFF);
+Color pureBlack = const Color(0xFF000000);

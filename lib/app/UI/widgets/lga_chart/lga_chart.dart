@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../services/number_rounder.dart';
 import '../../../constants/app_theme.dart';
 import '../section2_container.dart';
-import '../horizontal_label/label_bar.dart';
+import '../horizontal_label/horizontal_label_bar.dart';
 import '../horizontal_bar.dart';
 
 class LGAChart extends StatelessWidget {
@@ -31,10 +31,11 @@ class LGAChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container2(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header Text
           Padding(
-            padding: const EdgeInsets.only(top: 24, left: 8, bottom: 19),
+            padding: const EdgeInsets.only(top: 24, left: 16, bottom: 19),
             child: Text(
               'WIDOWS REGISTERED BY LOCAL GOVERNMENT',
               style: TextStyle(
@@ -72,15 +73,15 @@ class LGAChart extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
 
-                // Bars
+                // Bars and XAxis grading
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // TODO: Sort in reverse order of name
                     ...lgaRegistrationData
                         .map((personData) => Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 5, left: 2, right: 2),
+                              padding:
+                                  const EdgeInsets.only(bottom: 5, right: 3),
                               child: HorizontalBar(
                                 ratio: personData['count'] / xAxisMaxLabel,
                                 barColor: deepBlue,
@@ -90,10 +91,10 @@ class LGAChart extends StatelessWidget {
                             ))
                         .toList(),
                     const SizedBox(height: 8),
-                    LabelBar(
+                    HorizontalLabelBar(
                       maxLabel: xAxisMaxLabel,
                       xSpaceAvailable:
-                          (MediaQuery.of(context).size.width / 2.2268) + 8,
+                          (MediaQuery.of(context).size.width / 2.2268) + 9,
                     ),
                   ],
                 ),
