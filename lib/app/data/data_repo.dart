@@ -18,6 +18,14 @@ class DataRepo {
   /// Format: {'lga': 'String', 'count': int}
   static late List<Map<String, dynamic>> lgaData;
 
+  /// For section 4
+  /// Format: {'employmentStatus': 'String', 'count': int}
+  static late List<Map<String, dynamic>> employmentData;
+
+  /// For section 5
+  /// Format: {'affliationStatus': 'String', 'count': int}
+  static late List<Map<String, dynamic>> ngoAffiliationData;
+
   /// For section 7
   /// Format: {'ageWhenWidowed': 'String', 'count': int}
   static late List<Map<String, dynamic>> ageWhenWidowedData;
@@ -36,8 +44,11 @@ class DataRepo {
     late final List<Map<String, dynamic>> contents =
         jsonDecode(fileString).cast<Map<String, dynamic>>();
 
-    calculateVars(contents);
-
+    try {
+      calculateVars(contents);
+    } catch (e) {
+      print(e);
+    }
     // contents[0] = {ngoName: null, fullName: Jayeola Idayat,
     //husbandOccupation: Skilled Manual Labour (Tailoring, Hairdressing etc),
     //accountName: null, address: L/10 Bankole Street, ngoMembership: NO,
@@ -52,23 +63,26 @@ class DataRepo {
   }
 
   static void calculateVars(List<Map<String, dynamic>> contents) {
+    // Temporary lists for collating data before
+    // assigning them to the static permanent lists
     final List<Map<String, dynamic>> lgasToFreqList = [];
+    final List<Map<String, dynamic>> employmentStatusToFreqList = [];
+    final List<Map<String, dynamic>> ngoAffiliationToFreqList = [];
     final List<Map<String, dynamic>> widowedAgeToFreqList = [];
     final List<Map<String, dynamic>> occupationTypeToFreqList = [];
 
+    // Loop for extracting the data
     for (Map<String, dynamic> widowData in contents) {
       final String widowLga = widowData['lga'];
 
-      late final String occupation;
-      try {
-        occupation = widowData['occupation'];
-      } on TypeError {
-        occupation = 'Unemployed';
-      }
-
+      late final String employmentStatus = widowData['employmentStatus'];
+      late final String ngoMembershipStatus = widowData['ngoMembership'];
       final int ageWhenWidowedInYears = getAgeWhenWidowed(widowData);
+      late final String occupation = widowData['occupation'] ?? 'Unemployed';
 
       bool lgaMatchFound = false;
+      bool employmentStatusMatchFound = false;
+      bool ngoMembershipStatusMatchFound = false;
       bool occupationMatchFound = false;
       bool ageWhenWidowedMatchFound = false;
 
@@ -76,6 +90,20 @@ class DataRepo {
         if (lga['lga'] == widowLga) {
           lga['count']++;
           lgaMatchFound = true;
+          break;
+        }
+      }
+      for (Map<String, dynamic> status in employmentStatusToFreqList) {
+        if (status['employmentStatus'] == employmentStatus) {
+          status['count']++;
+          employmentStatusMatchFound = true;
+          break;
+        }
+      }
+      for (Map<String, dynamic> membershipStatus in ngoAffiliationToFreqList) {
+        if (membershipStatus['affliationStatus'] == ngoMembershipStatus) {
+          membershipStatus['count']++;
+          ngoMembershipStatusMatchFound = true;
           break;
         }
       }
@@ -97,6 +125,14 @@ class DataRepo {
       if (lgaMatchFound == false) {
         lgasToFreqList.add({'lga': widowLga, 'count': 1});
       }
+      if (employmentStatusMatchFound == false) {
+        employmentStatusToFreqList
+            .add({'employmentStatus': employmentStatus, 'count': 1});
+      }
+      if (ngoMembershipStatusMatchFound == false) {
+        ngoAffiliationToFreqList
+            .add({'affliationStatus': ngoMembershipStatus, 'count': 1});
+      }
       if (occupationMatchFound == false) {
         occupationTypeToFreqList.add({'occupation': occupation, 'count': 1});
       }
@@ -106,16 +142,22 @@ class DataRepo {
       }
     }
 
-    lgaCount = lgasToFreqList.length;
-    widowCount = lgasToFreqList.fold<int>(
-        0, (previousValue, element) => previousValue + element['count'] as int);
-    lgaData = [...lgasToFreqList];
-
-    occupationData = [...occupationTypeToFreqList];
-
     widowedAgeToFreqList
         .sort((a, b) => a['ageWhenWidowed'].compareTo(b['ageWhenWidowed']));
+
+    // Final asignments
+    widowCount = lgasToFreqList.fold<int>(
+        0, (previousValue, element) => previousValue + element['count'] as int);
+    lgaCount = lgasToFreqList.length;
+    lgaData = [...lgasToFreqList];
+    employmentData = [...employmentStatusToFreqList];
+    ngoAffiliationData = [...ngoAffiliationToFreqList];
+    occupationData = [...occupationTypeToFreqList];
     ageWhenWidowedData = [...widowedAgeToFreqList];
+
+    print(occupationData);
+    print(employmentData);
+    print(ngoAffiliationData);
   }
 
   static int getAgeWhenWidowed(Map<String, dynamic> widowData) {
