@@ -20,7 +20,7 @@ class DataRepo {
 
   /// For section 4
   /// Format: {'employmentStatus': 'String', 'count': int}
-  static late List<Map<String, dynamic>> employmentData;
+  static late List<Map<String, dynamic>> employmentStatusData;
 
   /// For section 5
   /// Format: {'affliationStatus': 'String', 'count': int}
@@ -150,13 +150,13 @@ class DataRepo {
         0, (previousValue, element) => previousValue + element['count'] as int);
     lgaCount = lgasToFreqList.length;
     lgaData = [...lgasToFreqList];
-    employmentData = [...employmentStatusToFreqList];
+    employmentStatusData = [...employmentStatusToFreqList];
     ngoAffiliationData = [...ngoAffiliationToFreqList];
     occupationData = [...occupationTypeToFreqList];
     ageWhenWidowedData = [...widowedAgeToFreqList];
 
     print(occupationData);
-    print(employmentData);
+    print(employmentStatusData);
     print(ngoAffiliationData);
   }
 

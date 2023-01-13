@@ -7,6 +7,8 @@ import 'widgets/components/container_1.dart';
 import 'widgets/lga_chart/lga_chart.dart';
 import 'widgets/occupation_chart/occupation_chart.dart';
 import 'widgets/age_widowed_chart/age_when_widowed_chart.dart';
+import 'widgets/employment_status_chart/employment_status_chart.dart';
+import 'widgets/ngo_affiliation_chart/ngo_affiliation_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -87,6 +89,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   // Section 3 - number by local gov chart
                                   LGAChart(
                                     lgaRegistrationData: DataRepo.lgaData,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Section 4 - Employment status chart
+                                  EmploymentStatusChart(
+                                    employmentStatusData:
+                                        DataRepo.employmentStatusData,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Section 5 - NGO Affiliation chart
+                                  NGOAffiliationChart(
+                                    ngoAffiliationData:
+                                        DataRepo.ngoAffiliationData,
                                   ),
                                   const SizedBox(height: 16),
 
