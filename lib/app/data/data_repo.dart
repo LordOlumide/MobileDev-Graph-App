@@ -154,10 +154,6 @@ class DataRepo {
     ngoAffiliationData = [...ngoAffiliationToFreqList];
     occupationData = [...occupationTypeToFreqList];
     ageWhenWidowedData = [...widowedAgeToFreqList];
-
-    print(occupationData);
-    print(employmentStatusData);
-    print(ngoAffiliationData);
   }
 
   static int getAgeWhenWidowed(Map<String, dynamic> widowData) {

@@ -18,7 +18,6 @@ class AgeWhenWidowedChart extends StatelessWidget {
         (previousValue, element) => element['count'] > previousValue
             ? element['count']
             : previousValue);
-    print(roundNumUpToNext10(maxNum));
     return roundNumUpToNext10(maxNum);
   }
 
@@ -47,7 +46,6 @@ class AgeWhenWidowedChart extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Format: {'ageRange': String, 'count': int}
     List<Map<String, dynamic>> displayCopy = setDisplayCopy();
-    print(displayCopy);
     final int yAxisMaxLabel = initializeMaxNum(displayCopy);
 
     return ShadowedContainer2(

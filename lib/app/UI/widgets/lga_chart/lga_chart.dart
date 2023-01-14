@@ -15,10 +15,10 @@ class LGAChart extends StatelessWidget {
     super.key,
     required this.lgaRegistrationData,
   }) {
-    xAxisMaxLabel = initializeNaxNum();
+    xAxisMaxLabel = initializeMaxNum();
   }
 
-  int initializeNaxNum() {
+  int initializeMaxNum() {
     int maxNum = lgaRegistrationData.fold(
         0,
         (previousValue, element) => element['count'] > previousValue
