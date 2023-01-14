@@ -1,44 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import '../../../constants/app_theme.dart';
-import '../../../services/calculate_angle.dart';
 import '../../../services/degree_to_radian.dart';
 
 class PieChartPainter extends CustomPainter {
-  /// Format: [{'affliationStatus': 'String', 'count': int}]
-  final List<Map<String, dynamic>> affiliationData;
-
-  late final int sumTotal;
-
   /// Format: [{"affliationStatus": "YES", "angle": 100, "color": Color}]
-  /// "count" sums up to 360
-  final List<Map<String, dynamic>> nameToAngleList = [];
+  final List<Map<String, dynamic>> nameToAngleList;
 
-  PieChartPainter(this.affiliationData) {
-    sumTotal = initializeSumTotal(affiliationData);
-    // Populate nameToAngle
-    for (Map<String, dynamic> i in affiliationData) {
-      nameToAngleList.add({
-        'affliationStatus':
-            i['affliationStatus'] != 'Do you belong to any NGO? '
-                ? i['affliationStatus']
-                : 'Unknown',
-        'angle': calculateAngle(quantity: i['count'], total: sumTotal),
-        'color': i['affliationStatus'] == "YES"
-            ? deepBlue
-            : i['affliationStatus'] == "NO"
-                ? normalBlue
-                : Colors.black,
-      });
-      // break;
-    }
-  }
+  final int sumTotal;
 
-  int initializeSumTotal(data) {
-    int total = affiliationData.fold(
-        0, (previousValue, element) => element['count'] + previousValue);
-    return total;
-  }
+  const PieChartPainter({
+    required this.nameToAngleList,
+    required this.sumTotal,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
