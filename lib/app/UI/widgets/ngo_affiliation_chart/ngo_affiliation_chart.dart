@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../constants/app_theme.dart';
 import '../../ui_helpers/shadows.dart';
+import 'pie_chart_painter.dart';
 
 class NGOAffiliationChart extends StatelessWidget {
   /// Format: {'affliationStatus': 'String', 'count': int}
@@ -48,9 +49,10 @@ class NGOAffiliationChart extends StatelessWidget {
           // Pie chart
           Row(
             children: [
-              SizedBox(
+              Container(
                 width: 170,
                 height: 170,
+                margin: const EdgeInsets.only(left: 20, bottom: 23),
                 child: CustomPaint(
                   foregroundPainter: PieChartPainter(ngoAffiliationData),
                 ),
@@ -61,41 +63,4 @@ class NGOAffiliationChart extends StatelessWidget {
       ),
     );
   }
-}
-
-class PieChartPainter extends CustomPainter {
-  final List<Map<String, dynamic>> affiliationData;
-
-  late final int sumTotal;
-
-  /// Format: [{"Yes": 100}, {"No": 200}, {"Unknown": 60}] // sums up to 360
-  late final List<Map<String, double>> nameToAngle = [];
-
-  PieChartPainter(this.affiliationData) {
-    sumTotal = initializeSumTotal(affiliationData);
-    for (Map<String, dynamic> i in affiliationData) {
-      print(i);
-    }
-  }
-
-  int initializeSumTotal(data) {
-    int total = affiliationData.fold(
-        0, (previousValue, element) => element['count'] + previousValue);
-    print(total);
-    return total;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-
-    final bottomPaint = Paint()
-      ..color = deepBlue
-      ..style = PaintingStyle.fill;
-
-    canvas.drawCircle(center, size.width / 2, bottomPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
