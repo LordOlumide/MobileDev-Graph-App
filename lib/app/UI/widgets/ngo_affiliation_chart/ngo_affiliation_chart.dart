@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../constants/app_theme.dart';
 import '../../ui_helpers/shadows.dart';
+import '../../ui_helpers/ngo_affiliation_colors.dart';
 import 'pie_chart_painter.dart';
-import '../../../constants/app_theme.dart';
 import '../../../services/calculate_angle.dart';
+import '../components/legend.dart';
 
 class NGOAffiliationChart extends StatelessWidget {
   /// Format: [{'affliationStatus': 'String', 'count': int}]
@@ -19,23 +20,19 @@ class NGOAffiliationChart extends StatelessWidget {
     sumTotal = initializeSumTotal(ngoAffiliationData);
     // Populate nameToAngle
     for (Map<String, dynamic> i in ngoAffiliationData) {
+      final String tempName =
+          i['affliationStatus'] != 'Do you belong to any NGO? '
+              ? i['affliationStatus']
+              : 'Unknown';
       nameToAngleList.add({
-        'affliationStatus':
-            i['affliationStatus'] != 'Do you belong to any NGO? '
-                ? i['affliationStatus']
-                : 'Unknown',
+        'affliationStatus': tempName,
         'angle': calculateAngle(quantity: i['count'], total: sumTotal),
-        'color': i['affliationStatus'] == "YES"
-            ? deepBlue
-            : i['affliationStatus'] == "NO"
-                ? normalBlue
-                : Colors.black,
+        'color': getNGOAffiliationColor(tempName),
       });
-      // break;
     }
   }
   int initializeSumTotal(data) {
-    int total = ngoAffiliationData.fold(
+    int total = data.fold(
         0, (previousValue, element) => element['count'] + previousValue);
     return total;
   }
@@ -68,7 +65,7 @@ class NGOAffiliationChart extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 24, left: 16, bottom: 29),
             child: Text(
-              'WIDOW\'S AFFLIATION TO NGO ',
+              'WIDOWS AFFLIATION TO NGO ',
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
@@ -87,8 +84,8 @@ class NGOAffiliationChart extends StatelessWidget {
                   height: 170,
                   margin: const EdgeInsets.only(right: 8),
                   child: CustomPaint(
-                    foregroundPainter: PieChartPainter(
-                        nameToAngleList: nameToAngleList, sumTotal: sumTotal),
+                    foregroundPainter:
+                        PieChartPainter(nameToAngleList: nameToAngleList),
                   ),
                 ),
 
@@ -107,40 +104,6 @@ class NGOAffiliationChart extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class LegendItem extends StatelessWidget {
-  final String text;
-  final Color color;
-
-  const LegendItem({super.key, required this.text, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 40,
-          height: 15,
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.84),
-            color: color,
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: const TextStyle(
-            fontSize: 6,
-            fontWeight: FontWeight.w400,
-            color: Color(0xFF0F0F0F),
-          ),
-        ),
-      ],
     );
   }
 }

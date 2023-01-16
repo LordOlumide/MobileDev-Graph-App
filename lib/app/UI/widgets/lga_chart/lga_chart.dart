@@ -6,7 +6,7 @@ import '../components/horizontal_label/horizontal_label_bar.dart';
 import '../components/horizontal_bar.dart';
 
 class LGAChart extends StatelessWidget {
-  /// Format: {'lga': 'String', 'count': int}
+  /// Format: [{'lga': 'String', 'count': int}]
   final List<Map<String, dynamic>> lgaRegistrationData;
 
   late final int xAxisMaxLabel;

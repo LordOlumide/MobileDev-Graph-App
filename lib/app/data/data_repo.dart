@@ -142,15 +142,39 @@ class DataRepo {
       }
     }
 
+    // Adjustments
     widowedAgeToFreqList
         .sort((a, b) => a['ageWhenWidowed'].compareTo(b['ageWhenWidowed']));
+    // To combine "Self Employed" and "Self-Employed"
+    List<Map<String, dynamic>> employmentStatusToFreqList2 = [];
+    for (Map<String, dynamic> statusToFreq in employmentStatusToFreqList) {
+      if ((statusToFreq['employmentStatus'] != 'Self-Employed') &&
+          (statusToFreq['employmentStatus'] != 'Self Employed')) {
+        employmentStatusToFreqList2.add(statusToFreq);
+      } else {
+        bool selfEmployedFound = false;
+        for (Map<String, dynamic> i in employmentStatusToFreqList2) {
+          if (i['employmentStatus'] == "Self Employed") {
+            selfEmployedFound = true;
+            i['count'] += statusToFreq['count'];
+            break;
+          }
+        }
+        if (selfEmployedFound == false) {
+          employmentStatusToFreqList2.add({
+            'employmentStatus': "Self Employed",
+            'count': statusToFreq['count']
+          });
+        }
+      }
+    }
 
     // Final asignments
     widowCount = lgasToFreqList.fold<int>(
         0, (previousValue, element) => previousValue + element['count'] as int);
     lgaCount = lgasToFreqList.length;
     lgaData = [...lgasToFreqList];
-    employmentStatusData = [...employmentStatusToFreqList];
+    employmentStatusData = [...employmentStatusToFreqList2];
     ngoAffiliationData = [...ngoAffiliationToFreqList];
     occupationData = [...occupationTypeToFreqList];
     ageWhenWidowedData = [...widowedAgeToFreqList];
