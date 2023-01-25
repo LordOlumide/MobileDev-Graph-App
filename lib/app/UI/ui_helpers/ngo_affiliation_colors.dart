@@ -1,4 +1,4 @@
-import '../../constants/app_theme.dart';
+import '../../theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 Color getNGOAffiliationColor(String status) {

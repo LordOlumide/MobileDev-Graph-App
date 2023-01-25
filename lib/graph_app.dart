@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app/UI/home_screen.dart';
-import 'app/constants/app_theme.dart';
+import 'app/theme/app_theme.dart';
 
 class GraphApp extends StatelessWidget {
   const GraphApp({super.key});

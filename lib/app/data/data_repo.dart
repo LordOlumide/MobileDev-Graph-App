@@ -26,6 +26,10 @@ class DataRepo {
   /// Format: {'affliationStatus': 'String', 'count': int}
   static late List<Map<String, dynamic>> ngoAffiliationData;
 
+  /// For section 6
+  /// Format: {'yearsAsWidow': 'String', 'count': int}
+  static late List<Map<String, dynamic>> yearsAsWidowData;
+
   /// For section 7
   /// Format: {'ageWhenWidowed': 'String', 'count': int}
   static late List<Map<String, dynamic>> ageWhenWidowedData;
@@ -35,10 +39,10 @@ class DataRepo {
   static late List<Map<String, dynamic>> occupationData;
 
   static Future<void> initialize() async {
-    file = decodeFileAndCalculatVars();
+    file = decodeFileAndCalculateVars();
   }
 
-  static Future<List<Map<String, dynamic>>> decodeFileAndCalculatVars() async {
+  static Future<List<Map<String, dynamic>>> decodeFileAndCalculateVars() async {
     final String fileString =
         await rootBundle.loadString('assets/jsons/json_data.json');
     late final List<Map<String, dynamic>> contents =
@@ -68,6 +72,7 @@ class DataRepo {
     final List<Map<String, dynamic>> lgasToFreqList = [];
     final List<Map<String, dynamic>> employmentStatusToFreqList = [];
     final List<Map<String, dynamic>> ngoAffiliationToFreqList = [];
+    final List<Map<String, dynamic>> yearsAsWidowToFreqList = [];
     final List<Map<String, dynamic>> widowedAgeToFreqList = [];
     final List<Map<String, dynamic>> occupationTypeToFreqList = [];
 
@@ -75,16 +80,22 @@ class DataRepo {
     for (Map<String, dynamic> widowData in contents) {
       final String widowLga = widowData['lga'];
 
-      late final String employmentStatus = widowData['employmentStatus'];
-      late final String ngoMembershipStatus = widowData['ngoMembership'];
-      final int ageWhenWidowedInYears = getAgeWhenWidowed(widowData);
-      late final String occupation = widowData['occupation'] ?? 'Unemployed';
+      final String employmentStatus = widowData['employmentStatus'];
+      final String ngoMembershipStatus = widowData['ngoMembership'];
+      final int yearsSpentAsWidow =
+          getYearsSpentAsWidow(widowData['husbandBereavementDate']);
+      final int ageWhenWidowedInYears = getAgeWhenWidowed(
+        husbandBereavementDate: widowData['husbandBereavementDate'],
+        dob: widowData['dob'],
+      );
+      final String occupation = widowData['occupation'] ?? 'Unemployed';
 
       bool lgaMatchFound = false;
       bool employmentStatusMatchFound = false;
       bool ngoMembershipStatusMatchFound = false;
-      bool occupationMatchFound = false;
       bool ageWhenWidowedMatchFound = false;
+      bool yearsAsWidowMatchFound = false;
+      bool occupationMatchFound = false;
 
       for (Map<String, dynamic> lga in lgasToFreqList) {
         if (lga['lga'] == widowLga) {
@@ -107,10 +118,10 @@ class DataRepo {
           break;
         }
       }
-      for (Map<String, dynamic> occupationType in occupationTypeToFreqList) {
-        if (occupationType['occupation'] == occupation) {
-          occupationType['count']++;
-          occupationMatchFound = true;
+      for (Map<String, dynamic> yearsAsWidow in yearsAsWidowToFreqList) {
+        if (yearsAsWidow['yearsAsWidow'] == yearsSpentAsWidow) {
+          yearsAsWidow['count']++;
+          yearsAsWidowMatchFound = true;
           break;
         }
       }
@@ -118,6 +129,13 @@ class DataRepo {
         if (ageWhenWidowed['ageWhenWidowed'] == ageWhenWidowedInYears) {
           ageWhenWidowed['count']++;
           ageWhenWidowedMatchFound = true;
+          break;
+        }
+      }
+      for (Map<String, dynamic> occupationType in occupationTypeToFreqList) {
+        if (occupationType['occupation'] == occupation) {
+          occupationType['count']++;
+          occupationMatchFound = true;
           break;
         }
       }
@@ -133,20 +151,28 @@ class DataRepo {
         ngoAffiliationToFreqList
             .add({'affliationStatus': ngoMembershipStatus, 'count': 1});
       }
-      if (occupationMatchFound == false) {
-        occupationTypeToFreqList.add({'occupation': occupation, 'count': 1});
+      if (yearsAsWidowMatchFound == false) {
+        yearsAsWidowToFreqList
+            .add({'yearsAsWidow': yearsSpentAsWidow, 'count': 1});
       }
       if (ageWhenWidowedMatchFound == false) {
         widowedAgeToFreqList
             .add({'ageWhenWidowed': ageWhenWidowedInYears, 'count': 1});
       }
+      if (occupationMatchFound == false) {
+        occupationTypeToFreqList.add({'occupation': occupation, 'count': 1});
+      }
     }
 
     // Adjustments
+    // To sort yearsAsWidowToFreqList
+    yearsAsWidowToFreqList
+        .sort((a, b) => a['yearsAsWidow'].compareTo(b['yearsAsWidow']));
+    // To sort widowedAgeToFreqList
     widowedAgeToFreqList
         .sort((a, b) => a['ageWhenWidowed'].compareTo(b['ageWhenWidowed']));
-    // To combine "Self Employed" and "Self-Employed"
-    List<Map<String, dynamic>> employmentStatusToFreqList2 = [];
+    // To combine "Self Employed" and "Self-Employed" in employmentStatusToFreqList
+    final List<Map<String, dynamic>> employmentStatusToFreqList2 = [];
     for (Map<String, dynamic> statusToFreq in employmentStatusToFreqList) {
       if ((statusToFreq['employmentStatus'] != 'Self-Employed') &&
           (statusToFreq['employmentStatus'] != 'Self Employed')) {
@@ -176,15 +202,27 @@ class DataRepo {
     lgaData = [...lgasToFreqList];
     employmentStatusData = [...employmentStatusToFreqList2];
     ngoAffiliationData = [...ngoAffiliationToFreqList];
-    occupationData = [...occupationTypeToFreqList];
+    yearsAsWidowData = [...yearsAsWidowToFreqList];
     ageWhenWidowedData = [...widowedAgeToFreqList];
+    occupationData = [...occupationTypeToFreqList];
   }
 
-  static int getAgeWhenWidowed(Map<String, dynamic> widowData) {
-    final DateTime dateWidowed = DateTime.parse(
-        formatToDateTimeAcceptable(widowData['husbandBereavementDate']));
-    final DateTime dateOfBirth = DateTime.parse(widowData['dob']);
+  static int getAgeWhenWidowed({
+    required String husbandBereavementDate,
+    required String dob,
+  }) {
+    final DateTime dateWidowed =
+        DateTime.parse(formatToDateTimeAcceptable(husbandBereavementDate));
+    final DateTime dateOfBirth = DateTime.parse(dob);
     final Duration ageWhenWidowedDuration = dateWidowed.difference(dateOfBirth);
     return DateTime(0, 0, ageWhenWidowedDuration.inDays).year;
+  }
+
+  static int getYearsSpentAsWidow(String husbandBereavementDate) {
+    final DateTime dateWidowed =
+        DateTime.parse(formatToDateTimeAcceptable(husbandBereavementDate));
+    final Duration yearsAsWidowDuration =
+        DateTime.now().difference(dateWidowed);
+    return DateTime(0, 0, yearsAsWidowDuration.inDays).year;
   }
 }

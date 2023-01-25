@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../constants/app_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../../ui_helpers/shadows.dart';
 import '../../ui_helpers/ngo_affiliation_colors.dart';
 import 'pie_chart_painter.dart';
@@ -83,9 +83,12 @@ class NGOAffiliationChart extends StatelessWidget {
                   width: 170,
                   height: 170,
                   margin: const EdgeInsets.only(right: 8),
-                  child: CustomPaint(
-                    foregroundPainter:
-                        PieChartPainter(nameToAngleList: nameToAngleList),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(170 / 2),
+                    child: CustomPaint(
+                      foregroundPainter:
+                          PieChartPainter(nameToAngleList: nameToAngleList),
+                    ),
                   ),
                 ),
 

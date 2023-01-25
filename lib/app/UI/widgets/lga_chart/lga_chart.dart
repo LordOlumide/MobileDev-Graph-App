@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../../services/number_rounder.dart';
-import '../../../constants/app_theme.dart';
+import '../../../theme/app_theme.dart';
 import '../components/container_2.dart';
 import '../components/horizontal_label/horizontal_label_bar.dart';
 import '../components/horizontal_bar.dart';
+import '../../../services/north_east_formatter.dart';
 
 class LGAChart extends StatelessWidget {
   /// Format: [{'lga': 'String', 'count': int}]
-  final List<Map<String, dynamic>> lgaRegistrationData;
+  late final List<Map<String, dynamic>> lgaRegistrationData;
+  final List<Map<String, dynamic>> lgaRegistrationDataTemp;
 
   late final int xAxisMaxLabel;
 
   LGAChart({
     super.key,
-    required this.lgaRegistrationData,
+    required this.lgaRegistrationDataTemp,
   }) {
+    // To sort in reverse alphabetical order of "lga"
+    lgaRegistrationDataTemp.sort((a, b) => a['lga'].compareTo(b['lga']));
+    lgaRegistrationData = lgaRegistrationDataTemp.reversed.toList();
+    // To save memory?
+    lgaRegistrationDataTemp.clear();
     xAxisMaxLabel = initializeMaxNum();
   }
 
@@ -58,15 +65,26 @@ class LGAChart extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: lgaRegistrationData
                       .map((personData) => Padding(
-                            padding: const EdgeInsets.only(bottom: 7),
-                            child: Text(
-                              '${personData['lga']}  -',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 6,
-                                fontWeight: FontWeight.w400,
-                                color: nearBlack,
-                              ),
+                            padding: const EdgeInsets.only(bottom: 7.1),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  formatLocation(personData['lga']),
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 6,
+                                    fontWeight: FontWeight.w400,
+                                    color: nearBlack,
+                                  ),
+                                ),
+                                Container(
+                                  width: 2.71,
+                                  height: 1,
+                                  color: nearBlack,
+                                  margin: const EdgeInsets.only(left: 2.3),
+                                ),
+                              ],
                             ),
                           ))
                       .toList(),

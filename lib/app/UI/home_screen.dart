@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_theme.dart';
+import '../theme/app_theme.dart';
 import '../data/data_repo.dart';
 import './ui_helpers/shadows.dart';
 // widgets
@@ -9,6 +9,7 @@ import 'widgets/occupation_chart/occupation_chart.dart';
 import 'widgets/age_widowed_chart/age_when_widowed_chart.dart';
 import 'widgets/employment_status_chart/employment_status_chart.dart';
 import 'widgets/ngo_affiliation_chart/ngo_affiliation_chart.dart';
+import 'widgets/years_as_widow_chart/years_as_widow_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -88,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   // Section 3 - number by local gov chart
                                   LGAChart(
-                                    lgaRegistrationData: DataRepo.lgaData,
+                                    lgaRegistrationDataTemp: DataRepo.lgaData,
                                   ),
                                   const SizedBox(height: 16),
 
@@ -104,6 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ngoAffiliationData:
                                         DataRepo.ngoAffiliationData,
                                   ),
+                                  const SizedBox(height: 16),
+
+                                  // Section 6 - Years spent as widow chart
+                                  YearsSpentAsWidowChart(
+                                      yearsAsWidowData:
+                                          DataRepo.yearsAsWidowData),
                                   const SizedBox(height: 16),
 
                                   // Section 7 - Widows age at spouse bereavement
