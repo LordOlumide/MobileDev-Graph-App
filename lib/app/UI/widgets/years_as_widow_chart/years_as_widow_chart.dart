@@ -6,13 +6,21 @@ class YearsSpentAsWidowChart extends StatelessWidget {
   /// Format: [{'yearsAsWidow': 'String', 'count': int}]
   final List<Map<String, dynamic>> yearsAsWidowData;
 
-  const YearsSpentAsWidowChart({super.key, required this.yearsAsWidowData});
+  final List<Map<String, dynamic>> yearsAsWidowData2 = [];
+
+  YearsSpentAsWidowChart({super.key, required this.yearsAsWidowData}) {
+    for (Map<String, dynamic> i in yearsAsWidowData) {
+      if (i['yearsAsWidow'] > 20) {
+        yearsAsWidowData2[18]['count'] += i['count'];
+      } else {
+        yearsAsWidowData2.add(i);
+      }
+    }
+    print(yearsAsWidowData2);
+  }
 
   @override
   Widget build(BuildContext context) {
-    for (Map<String, dynamic> i in yearsAsWidowData) {
-      print(i['yearsAsWidow']);
-    }
     return Container(
       decoration: BoxDecoration(
         color: pureWhite,

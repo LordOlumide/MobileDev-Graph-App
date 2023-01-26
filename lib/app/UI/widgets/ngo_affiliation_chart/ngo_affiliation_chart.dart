@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:mobile_dev_graph_app/app/services/degree_to_radian.dart';
 import '../../../theme/app_theme.dart';
 import '../../ui_helpers/shadows.dart';
 import '../../ui_helpers/ngo_affiliation_colors.dart';
@@ -7,16 +10,18 @@ import '../../../services/calculate_angle.dart';
 import '../components/legend.dart';
 
 class NGOAffiliationChart extends StatelessWidget {
-  /// Format: [{'affliationStatus': 'String', 'count': int}]
-  final List<Map<String, dynamic>> ngoAffiliationData;
-
-  late final int sumTotal;
-
   /// Format: [{"affliationStatus": "YES", "angle": 100, "color": Color}]
   /// "count" sums up to 360
   final List<Map<String, dynamic>> nameToAngleList = [];
 
-  NGOAffiliationChart({super.key, required this.ngoAffiliationData}) {
+  late final int sumTotal;
+
+  NGOAffiliationChart({
+    super.key,
+
+    /// Format: [{'affliationStatus': 'String', 'count': int}]
+    required List<Map<String, dynamic>> ngoAffiliationData,
+  }) {
     sumTotal = initializeSumTotal(ngoAffiliationData);
     // Populate nameToAngle
     for (Map<String, dynamic> i in ngoAffiliationData) {
@@ -83,8 +88,8 @@ class NGOAffiliationChart extends StatelessWidget {
                   width: 170,
                   height: 170,
                   margin: const EdgeInsets.only(right: 8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(170 / 2),
+                  child: Transform.rotate(
+                    angle: degreeToRadian(274),
                     child: CustomPaint(
                       foregroundPainter:
                           PieChartPainter(nameToAngleList: nameToAngleList),

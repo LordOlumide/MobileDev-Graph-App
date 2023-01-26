@@ -19,53 +19,52 @@ class PieChartPainter extends CustomPainter {
     // ];
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double radius = size.width / 2;
-    final Rect rect =
-        Rect.fromCenter(center: center, width: size.width, height: size.height);
 
-    Offset arcStartPoint = Offset(size.width, size.height / 2);
-    double startAngleInRadian = pi + degreeToRadian(6);
-    double angleSweptInDegrees = 0;
+    double totalAngleInDegrees = 0;
 
-    Offset getNextStartPoint({
-      required double totalAngleInDegrees,
-    }) {
-      final double angleInRadian = totalAngleInDegrees;
+    Offset startingPoint = Offset(size.width / 2, 0);
+    Offset currentPoint = Offset(startingPoint.dx, startingPoint.dy);
+
+    void refreshCurrentPoint() {
+      final double angleInRadian = degreeToRadian(totalAngleInDegrees);
 
       double xDisplacement =
           2 * radius * sin(angleInRadian / 2) * cos(angleInRadian / 2);
       double yDisplacement =
           2 * radius * sin(angleInRadian / 2) * sin(angleInRadian / 2);
 
-      double a = totalAngleInDegrees > 180
-          ? arcStartPoint.dx - xDisplacement
-          : arcStartPoint.dx - xDisplacement;
-      double b = arcStartPoint.dy + yDisplacement;
+      double a = startingPoint.dx + xDisplacement;
+      double b = startingPoint.dy + yDisplacement;
 
-      return Offset(a, b);
+      currentPoint = Offset(a, b);
     }
 
     for (Map<String, dynamic> nameToAngle in nameToAngleList) {
-      final double sweepAngleInRadian = degreeToRadian(nameToAngle['angle']);
-
-      // TODO: Change the implementation to actually draw sectors.
       final paint = Paint()
         ..color = nameToAngle['color']
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = size.width;
-      final path = Path();
-      // path.moveTo(center.dx, center.dy);
-      // path.lineTo(arcStartPoint.dx, arcStartPoint.dy);
-      path.addArc(rect, startAngleInRadian, sweepAngleInRadian);
-      // path.lineTo(center.dx, center.dy);
+        ..style = PaintingStyle.fill;
 
-      // arcStartPoint = getNextStartPoint(
-      //     currentPoint: arcStartPoint,
-      //     angleInRadian: sweepAngleInRadian,
-      //     radius: radius);
-      // startAngleInRadian += sweepAngleInRadian;
+      final path = Path();
+      path.moveTo(center.dx, center.dy);
+      path.lineTo(currentPoint.dx, currentPoint.dy);
+
+      if (nameToAngle['angle'] <= 180) {
+        totalAngleInDegrees += nameToAngle['angle'];
+        refreshCurrentPoint();
+        path.arcToPoint(currentPoint, radius: Radius.circular(radius));
+      } else {
+        totalAngleInDegrees += 180;
+        refreshCurrentPoint();
+        path.arcToPoint(currentPoint, radius: Radius.circular(radius));
+        totalAngleInDegrees += nameToAngle['angle'] - 180;
+        refreshCurrentPoint();
+        path.arcToPoint(currentPoint, radius: Radius.circular(radius));
+      }
+      path.lineTo(center.dx, center.dy);
 
       canvas.drawPath(path, paint);
     }
+    canvas.rotate(pi + degreeToRadian(6));
   }
 
   @override

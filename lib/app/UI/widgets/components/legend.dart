@@ -11,13 +11,15 @@ class LegendItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 40,
-          height: 15,
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.84),
-            color: color,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 40, minWidth: 10),
+          child: Container(
+            height: 15,
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.84),
+              color: color,
+            ),
           ),
         ),
         const SizedBox(width: 4),

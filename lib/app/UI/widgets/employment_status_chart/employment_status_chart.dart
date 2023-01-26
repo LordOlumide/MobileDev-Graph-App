@@ -7,16 +7,18 @@ import 'torus_chart.dart';
 import '../components/legend.dart';
 
 class EmploymentStatusChart extends StatelessWidget {
-  /// Format: [{'employmentStatus': 'String', 'count': int}]
-  final List<Map<String, dynamic>> employmentStatusData;
-
-  late final int sumTotal;
-
   /// Format: [{"employmentStatus": "YES", "angle": 100, "color": Color}]
   /// "count" sums up to 360
   final List<Map<String, dynamic>> nameToAngleList = [];
 
-  EmploymentStatusChart({super.key, required this.employmentStatusData}) {
+  late final int sumTotal;
+
+  EmploymentStatusChart({
+    super.key,
+
+    /// Format: [{'employmentStatus': 'String', 'count': int}]
+    required List<Map<String, dynamic>> employmentStatusData,
+  }) {
     sumTotal = initializeSumTotal(employmentStatusData);
     // Populate nameToAngle
     for (Map<String, dynamic> i in employmentStatusData) {
