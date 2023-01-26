@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                   // Section 6 - Years spent as widow chart
                                   YearsSpentAsWidowChart(
-                                      yearsAsWidowData:
+                                      yearsAsWidowDataTemp:
                                           DataRepo.yearsAsWidowData),
                                   const SizedBox(height: 16),
 

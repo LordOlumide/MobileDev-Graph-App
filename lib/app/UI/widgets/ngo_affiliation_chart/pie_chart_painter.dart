@@ -12,11 +12,6 @@ class PieChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // final List<Map<String, dynamic>> testList = [
-    //   {"affliationStatus": "YES", "angle": 160.0, "color": Colors.green},
-    //   {"affliationStatus": "NO", "angle": 100.0, "color": Colors.blue},
-    //   {"affliationStatus": "Unknown", "angle": 100.0, "color": Colors.pink},
-    // ];
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double radius = size.width / 2;
 
@@ -64,7 +59,6 @@ class PieChartPainter extends CustomPainter {
 
       canvas.drawPath(path, paint);
     }
-    canvas.rotate(pi + degreeToRadian(6));
   }
 
   @override

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../ui_helpers/shadows.dart';
 import '../../../theme/app_theme.dart';
+import 'scatter_chart_painter.dart';
 
 class YearsSpentAsWidowChart extends StatelessWidget {
   /// Format: [{'yearsAsWidow': 'String', 'count': int}]
-  final List<Map<String, dynamic>> yearsAsWidowData;
+  final List<Map<String, dynamic>> yearsAsWidowData = [];
 
-  final List<Map<String, dynamic>> yearsAsWidowData2 = [];
-
-  YearsSpentAsWidowChart({super.key, required this.yearsAsWidowData}) {
-    for (Map<String, dynamic> i in yearsAsWidowData) {
+  YearsSpentAsWidowChart({super.key, required yearsAsWidowDataTemp}) {
+    for (Map<String, dynamic> i in yearsAsWidowDataTemp) {
       if (i['yearsAsWidow'] > 20) {
-        yearsAsWidowData2[18]['count'] += i['count'];
+        yearsAsWidowData[18]['count'] += i['count'];
       } else {
-        yearsAsWidowData2.add(i);
+        yearsAsWidowData.add(i);
       }
     }
-    print(yearsAsWidowData2);
   }
 
   @override
@@ -41,19 +39,32 @@ class YearsSpentAsWidowChart extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Header Text
-          Padding(
-            padding: const EdgeInsets.only(top: 24, left: 16),
-            child: Text(
-              'WIDOWS AFFLIATION TO NGO ',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w400,
-                color: nearBlack,
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24, left: 16),
+              child: Text(
+                'YEARS SPENT AS A WIDOW',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: nearBlack,
+                ),
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+
+          // Chart
+          SizedBox(
+            width: 240,
+            height: 95,
+            child: CustomPaint(
+                foregroundPainter: YearsAsWidowScatterPlotPainter(
+                    yearsAsWidowData: yearsAsWidowData)),
           ),
         ],
       ),
