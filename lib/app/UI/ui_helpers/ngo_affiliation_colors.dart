@@ -8,7 +8,7 @@ Color getNGOAffiliationColor(String status) {
     case 'NO':
       return normalBlue;
     case 'Unknown':
-      return Colors.grey;
+      return normalYellow;
     default:
       throw Exception('Invalid String passed to getNGOAffiliationColor');
   }

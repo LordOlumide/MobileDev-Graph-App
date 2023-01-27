@@ -83,7 +83,7 @@ class NGOAffiliationChart extends StatelessWidget {
                   height: 170,
                   margin: const EdgeInsets.only(right: 8),
                   child: Transform.rotate(
-                    angle: degreeToRadian(274),
+                    angle: degreeToRadian(275),
                     child: CustomPaint(
                       foregroundPainter:
                           PieChartPainter(nameToAngleList: nameToAngleList),
