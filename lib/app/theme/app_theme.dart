@@ -9,3 +9,4 @@ Color normalYellow = const Color(0xFFFED500);
 Color nearBlack = const Color(0xFF111111);
 Color pureWhite = const Color(0xFFFFFFFF);
 Color pureBlack = const Color(0xFF000000);
+Color commentBoxColor = const Color(0xFFD9D9D9);

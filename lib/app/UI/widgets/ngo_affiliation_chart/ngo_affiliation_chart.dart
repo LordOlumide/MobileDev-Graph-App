@@ -7,6 +7,7 @@ import '../../ui_helpers/shadows.dart';
 import '../../ui_helpers/ngo_affiliation_colors.dart';
 import 'pie_chart_painter.dart';
 import '../../../services/calculate_angle.dart';
+import '../../../services/init_sum_total.dart';
 import '../components/legend.dart';
 
 class NGOAffiliationChart extends StatelessWidget {
@@ -35,11 +36,6 @@ class NGOAffiliationChart extends StatelessWidget {
         'color': getNGOAffiliationColor(tempName),
       });
     }
-  }
-  int initializeSumTotal(data) {
-    int total = data.fold(
-        0, (previousValue, element) => element['count'] + previousValue);
-    return total;
   }
 
   @override
