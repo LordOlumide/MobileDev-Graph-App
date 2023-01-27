@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../services/init_sum_total.dart';
 
 class YearsAsWidowScatterPlotPainter extends CustomPainter {
   /// Format: [{'yearsAsWidow': 'String', 'count': int}]
@@ -10,18 +9,16 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
   late final int minValue;
 
   YearsAsWidowScatterPlotPainter({required this.yearsAsWidowData}) {
-    maxValue = (yearsAsWidowData.fold(
-            0,
-            (previousValue, element) => element['count'] > previousValue
-                ? element['count']
-                : previousValue) +
-        15);
-    minValue = (yearsAsWidowData.fold(
-            maxValue,
-            (previousValue, element) => element['count'] < previousValue
-                ? element['count']
-                : previousValue) +
-        15);
+    maxValue = yearsAsWidowData.fold(
+        0,
+        (previousValue, element) => element['count'] > previousValue
+            ? element['count']
+            : previousValue);
+    minValue = yearsAsWidowData.fold(
+        maxValue,
+        (previousValue, element) => element['count'] < previousValue
+            ? element['count']
+            : previousValue);
   }
 
   @override
@@ -37,22 +34,16 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
       xCoord += xSpacing;
     }
 
-    final double highestYPoint = scatterPoints.fold(
-        0,
-        (previousValue, element) =>
-            element.dy > previousValue ? element.dy : previousValue);
-
     // Gradient Layer
-    final paint = Paint()
+    final Paint paint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [deepBlue, deepBlue.withOpacity(0.04)],
-        stops: [highestYPoint / maxValue, 1],
       ).createShader(Rect.fromLTRB(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
-    final path = Path();
+    final Path path = Path();
     path.moveTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
@@ -64,7 +55,7 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
     canvas.drawPath(path, paint);
 
     // Border
-    final borderPaint = Paint()
+    final Paint borderPaint = Paint()
       ..color = deepBlue
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.36
@@ -75,11 +66,11 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
     }
 
     // Circles
-    final circleBorderPaint = Paint()
+    final Paint circleBorderPaint = Paint()
       ..color = deepBlue
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.09;
-    final circleInnerPaint = Paint()
+    final Paint circleInnerPaint = Paint()
       ..color = pureWhite
       ..style = PaintingStyle.fill;
     for (int i = 0; i < scatterPoints.length; i++) {
@@ -89,22 +80,21 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
 
     // Value Indicators
     for (int i = 0; i < scatterPoints.length; i++) {
-      Offset boxOrigin =
-          Offset(scatterPoints[i].dx, scatterPoints[i].dy - 2.88);
+      Offset boxOrigin = Offset(scatterPoints[i].dx, scatterPoints[i].dy - 4.7);
 
       final bool isMaxOrMin = yearsAsWidowData[i]['count'] == maxValue ||
           yearsAsWidowData[i]['count'] == minValue;
 
-      final commentBoxPaint = Paint()
-        ..color = isMaxOrMin ? deepBlue : commentBoxColor
+      final Paint commentBoxPaint = Paint()
+        ..color = isMaxOrMin ? deepBlue : pureWhite
         ..style = PaintingStyle.fill;
 
-      final commentBoxPath = Path();
+      final Path commentBoxPath = Path();
       // Triangle
-      path.moveTo(boxOrigin.dx, boxOrigin.dx);
-      path.lineTo(boxOrigin.dx - 1.7, boxOrigin.dy - 2.94);
-      path.lineTo(boxOrigin.dx + 1.7, boxOrigin.dy + 2.94);
-      path.moveTo(boxOrigin.dx, boxOrigin.dx);
+      commentBoxPath.moveTo(boxOrigin.dx, boxOrigin.dy);
+      commentBoxPath.lineTo(boxOrigin.dx - 2, boxOrigin.dy - 2.95);
+      commentBoxPath.lineTo(boxOrigin.dx + 2, boxOrigin.dy - 2.95);
+      commentBoxPath.close();
       // RRect
       final RRect rrect = RRect.fromLTRBAndCorners(
         boxOrigin.dx - 5.575,
@@ -116,15 +106,18 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
         bottomLeft: const Radius.circular(2.45),
         bottomRight: const Radius.circular(2.45),
       );
-      path.addRRect(rrect);
-      // shadow
+      commentBoxPath.addRRect(rrect);
+      // // shadow
       canvas.drawShadow(
-          commentBoxPath, shadow1Color.withOpacity(0.2), 2.0, false);
+          commentBoxPath, shadow1Color.withOpacity(0.3), 1.0, false);
+      canvas.drawPath(commentBoxPath, commentBoxPaint);
+
       // text
       final textPainter = TextPainter(
         textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
         text: TextSpan(
-          text: yearsAsWidowData[i]['count'],
+          text: yearsAsWidowData[i]['count'].toString(),
           style: TextStyle(
             fontSize: 4.35,
             fontWeight: FontWeight.w400,
@@ -134,9 +127,10 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
         ),
       );
       textPainter.layout();
-      textPainter.paint(canvas, rrect.center);
-
-      canvas.drawPath(commentBoxPath, commentBoxPaint);
+      textPainter.paint(
+          canvas,
+          Offset(rrect.center.dx - (textPainter.width / 2),
+              rrect.center.dy - (textPainter.height / 2)));
     }
   }
 
