@@ -7,11 +7,18 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
   final List<Map<String, dynamic>> yearsAsWidowData;
 
   late final int maxValue;
+  late final int minValue;
 
   YearsAsWidowScatterPlotPainter({required this.yearsAsWidowData}) {
     maxValue = (yearsAsWidowData.fold(
             0,
             (previousValue, element) => element['count'] > previousValue
+                ? element['count']
+                : previousValue) +
+        15);
+    minValue = (yearsAsWidowData.fold(
+            maxValue,
+            (previousValue, element) => element['count'] < previousValue
                 ? element['count']
                 : previousValue) +
         15);
@@ -78,6 +85,58 @@ class YearsAsWidowScatterPlotPainter extends CustomPainter {
     for (int i = 0; i < scatterPoints.length; i++) {
       canvas.drawCircle(scatterPoints[i], 1, circleInnerPaint);
       canvas.drawCircle(scatterPoints[i], 1.765, circleBorderPaint);
+    }
+
+    // Value Indicators
+    for (int i = 0; i < scatterPoints.length; i++) {
+      Offset boxOrigin =
+          Offset(scatterPoints[i].dx, scatterPoints[i].dy - 2.88);
+
+      final bool isMaxOrMin = yearsAsWidowData[i]['count'] == maxValue ||
+          yearsAsWidowData[i]['count'] == minValue;
+
+      final commentBoxPaint = Paint()
+        ..color = isMaxOrMin ? deepBlue : commentBoxColor
+        ..style = PaintingStyle.fill;
+
+      final commentBoxPath = Path();
+      // Triangle
+      path.moveTo(boxOrigin.dx, boxOrigin.dx);
+      path.lineTo(boxOrigin.dx - 1.7, boxOrigin.dy - 2.94);
+      path.lineTo(boxOrigin.dx + 1.7, boxOrigin.dy + 2.94);
+      path.moveTo(boxOrigin.dx, boxOrigin.dx);
+      // RRect
+      final RRect rrect = RRect.fromLTRBAndCorners(
+        boxOrigin.dx - 5.575,
+        boxOrigin.dy - 11.79,
+        boxOrigin.dx + 5.575,
+        boxOrigin.dy - 2.95,
+        topLeft: const Radius.circular(2.45),
+        topRight: const Radius.circular(2.45),
+        bottomLeft: const Radius.circular(2.45),
+        bottomRight: const Radius.circular(2.45),
+      );
+      path.addRRect(rrect);
+      // shadow
+      canvas.drawShadow(
+          commentBoxPath, shadow1Color.withOpacity(0.2), 2.0, false);
+      // text
+      final textPainter = TextPainter(
+        textDirection: TextDirection.ltr,
+        text: TextSpan(
+          text: yearsAsWidowData[i]['count'],
+          style: TextStyle(
+            fontSize: 4.35,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Inter',
+            color: isMaxOrMin ? pureWhite : deepBlue,
+          ),
+        ),
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, rrect.center);
+
+      canvas.drawPath(commentBoxPath, commentBoxPaint);
     }
   }
 

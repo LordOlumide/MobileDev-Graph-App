@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/app_theme.dart';
 
 BoxShadow customShadow1({
   required double dx,
@@ -7,7 +8,7 @@ BoxShadow customShadow1({
   required double opacity,
 }) {
   return BoxShadow(
-    color: const Color(0xFF717171).withOpacity(opacity),
+    color: shadow1Color.withOpacity(opacity),
     offset: Offset(dx, dy),
     blurRadius: blurRadius,
   );
@@ -20,7 +21,7 @@ BoxShadow customShadow2({
   required double opacity,
 }) {
   return BoxShadow(
-    color: const Color(0xFF5690C6).withOpacity(0.2),
+    color: shadow2Color.withOpacity(0.2),
     offset: const Offset(2, 2),
     blurRadius: 4,
   );
