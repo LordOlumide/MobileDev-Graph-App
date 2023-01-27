@@ -1,10 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/services.dart';
 import '../services/date_formatter.dart';
 
 class DataRepo {
-  // // TODO: change home screen state to depend on this, not file
-  // static late Future<bool> initializationProcess;
   static late Future<List<Map<String, dynamic>>> file;
 
   // These variables are only available after decodeFile() completes
@@ -51,7 +50,7 @@ class DataRepo {
     try {
       calculateVars(contents);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
     // contents[0] = {ngoName: null, fullName: Jayeola Idayat,
     //husbandOccupation: Skilled Manual Labour (Tailoring, Hairdressing etc),

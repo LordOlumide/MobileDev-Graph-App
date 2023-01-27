@@ -95,7 +95,6 @@ class LGAChart extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // TODO: Sort in reverse order of name
                     ...lgaRegistrationData
                         .map((personData) => Padding(
                               padding:

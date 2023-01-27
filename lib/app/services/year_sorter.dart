@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 String yearSorter(int year) {
   if (year >= 0 && year < 20) {
     return '<20';
@@ -20,7 +22,7 @@ String yearSorter(int year) {
   } else if (year >= 60 && year <= 200) {
     return '60+';
   } else {
-    print(year);
+    log(year.toString());
     throw Exception('Invalid year passed to function yearSorted');
   }
 }

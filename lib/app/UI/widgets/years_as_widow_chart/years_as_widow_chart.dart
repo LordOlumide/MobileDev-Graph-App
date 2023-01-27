@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../ui_helpers/shadows.dart';
 import '../../../theme/app_theme.dart';
 import 'scatter_chart_painter.dart';
+import 'label.dart';
 
 class YearsSpentAsWidowChart extends StatelessWidget {
   /// Format: [{'yearsAsWidow': 'String', 'count': int}]
@@ -19,6 +20,8 @@ class YearsSpentAsWidowChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double chartWidth = MediaQuery.of(context).size.width - 120;
+
     return Container(
       decoration: BoxDecoration(
         color: pureWhite,
@@ -60,12 +63,33 @@ class YearsSpentAsWidowChart extends StatelessWidget {
 
           // Chart
           SizedBox(
-            width: 240,
+            width: chartWidth,
             height: 95,
             child: CustomPaint(
-                foregroundPainter: YearsAsWidowScatterPlotPainter(
-                    yearsAsWidowData: yearsAsWidowData)),
+              foregroundPainter: YearsAsWidowScatterPlotPainter(
+                yearsAsWidowData: yearsAsWidowData,
+              ),
+            ),
           ),
+          const SizedBox(height: 3.23),
+
+          SizedBox(
+            width: chartWidth + 8.5,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  for (int i = 0; i < yearsAsWidowData.length; i++)
+                    ScatterPlotLabel(
+                        label: yearsAsWidowData[i]['yearsAsWidow'] != 20
+                            ? yearsAsWidowData[i]['yearsAsWidow'].toString()
+                            : '20+'),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
