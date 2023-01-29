@@ -1,8 +1,13 @@
 # mobile_dev_graph_app
 
-A new Flutter project.
+A challenge by the Mobile Dev Community.
+The app extracts some data from a Json file and builds a beautiful
+UI that displays the data.
+No graph package is used. All charts are built manually.
 
-## Getting Started
+# Demo preview
+
+![App Demo]("assets/videos/app_demo.mp4")
 
 This project is a starting point for a Flutter application.
 
