@@ -6,3 +6,5 @@ UI that displays the data.
 No graph package is used. All charts are built manually.
 
 # Demo preview
+
+![App Demo]("assets\videos\app_demo.gif")
