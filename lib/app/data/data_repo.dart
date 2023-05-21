@@ -37,7 +37,7 @@ class DataRepo {
   /// Format: {'occupation': 'String', 'count': int}
   static late List<Map<String, dynamic>> occupationData;
 
-  static Future<void> initialize() async {
+  static Future initialize() async {
     file = decodeFileAndCalculateVars();
   }
 

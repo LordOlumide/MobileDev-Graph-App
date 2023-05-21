@@ -1,7 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mobile_dev_graph_app">
-   <application
-        android:label="mobile_dev_graph_app"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:label="mobiledev_graph_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
